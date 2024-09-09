@@ -276,6 +276,18 @@ impl Neuron {
         }
     }
 
+    pub fn leaky_relu(y: &mut Matrix, u: &Matrix) {
+        for i in 0 .. u.height() {
+            y[i][0] = if 0.0 <= u[i][0] { u[i][0] } else { 0.01*u[i][0] };
+        }
+    }
+
+    pub fn leaky_relu_diff(y: &mut Matrix, u: &Matrix) {
+        for i in 0 .. u.height() {
+            y[i][0] = if 0.0 <= u[i][0] { 1.0 } else { 0.01 };
+        }
+    }
+
     pub fn identity(y: &mut Matrix, u: &Matrix) {
         for i in 0 .. u.height() {
             y[i][0] = u[i][0];
