@@ -11,7 +11,7 @@ pub fn rand() -> u64 {
         };
 
         let seed_copy = seed;
-        seed |= 0xff00_ff00_ff00_ff00_00ff_00ff_00ff_00ff;
+        
         seed ^= (seed_copy&0x01ff_ffff_ffff_ffff_ffff_ffff_ffff_ffff) << 7;
         seed ^= seed_copy >> 9;
 
@@ -19,5 +19,15 @@ pub fn rand() -> u64 {
 
         (seed & 0xffff_ffff_ffff_ffff) as u64
     }
+}
+
+
+pub fn shuffle<T>(target: &mut [T]) -> &mut [T] {
+    for i in (1 .. target.len()).rev() {
+        let swap_index = (((rand() & 0xffff_ffff) as usize) % i);
+        target.swap(swap_index, i);
+    }
+
+    target
 }
 

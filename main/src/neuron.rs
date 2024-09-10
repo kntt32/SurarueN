@@ -165,11 +165,11 @@ impl Neuron {
 
     pub fn learn(&mut self, epoch: usize, learning_rate: f64) {
         for _ in 0 .. epoch {
-            self.learn_(learning_rate);
+            self.learn_(learning_rate, 0);
         }
     }
 
-    fn learn_(&mut self, learning_rate: f64) {
+    fn learn_(&mut self, learning_rate: f64, batch_size: usize) {
         let mut reset_diff = || {
             for i in 1 .. self.layer.len() {
                 let target_layer = &mut self.layer[i];
