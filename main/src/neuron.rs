@@ -1,4 +1,5 @@
 use crate::matrix::Matrix;
+use crate::rand::shuffle;
 
 use std::fmt::{Display, Formatter, Error};
 
@@ -163,9 +164,9 @@ impl Neuron {
         self
     }
 
-    pub fn learn(&mut self, epoch: usize, learning_rate: f64) {
+    pub fn learn(&mut self, epoch: usize, learning_rate: f64, batch_size: usize) {
         for _ in 0 .. epoch {
-            self.learn_(learning_rate, 0);
+            self.learn_(learning_rate, batch_size);
         }
     }
 
@@ -188,7 +189,14 @@ impl Neuron {
 
         reset_diff();
 
-        for target_index in 0 .. self.target.len() {
+        let mut shuffled_target_index: Vec<usize> = (0 .. self.target.len()).collect();
+        if batch_size != 0 && batch_size <= self.target.len() {
+            shuffle(&mut shuffled_target_index);
+
+            shuffled_target_index.resize(batch_size, 0);
+        }
+
+        for target_index in shuffled_target_index.into_iter() {
             self.run_(&self.target[target_index].input.clone()[..], RunMode::Learn);
 
             let mut calc_delta = || {
