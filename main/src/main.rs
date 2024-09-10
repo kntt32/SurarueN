@@ -9,17 +9,18 @@ fn main() {
     println!("{:?}", vec);
 
     let mut neuron = Neuron::new(2);
-    neuron.push_layer(50, Neuron::leaky_relu, Neuron::leaky_relu_diff);
+    neuron.push_layer(30, Neuron::leaky_relu, Neuron::leaky_relu_diff);
+    neuron.push_layer(30, Neuron::leaky_relu, Neuron::leaky_relu_diff);
     neuron.push_layer(1, Neuron::identity, Neuron::identity_diff);
 
     const max: usize = 10;
     for y in 0 .. max {
         for x in 0 .. max {
-            neuron.push_target(&[y as f64, x as f64], &[(x*y) as f64]);
+            neuron.push_target(&[y as f64, x as f64], &[(x*x+y) as f64]);
         }
     }
 
-    neuron.learn(5000, 0.0001, 100);
+    neuron.learn(1000, 0.00001, 50);
 
     for y in 0 .. max {
         for x in 0 .. max {
